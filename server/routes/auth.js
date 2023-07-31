@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const fetchuser = require("../middleware/fetchuser");
 require("dotenv").config();
 
 router.post(
@@ -56,7 +58,7 @@ router.post(
 //login
 
 router.post(
-  "/",
+  "/login",
   [
     body("email", "enter valid email").isEmail(),
     body("password", "password length is small").isLength({ min: 5 }),
@@ -74,7 +76,7 @@ router.post(
       if (!user) {
         return res.status(400).json({ error: "enter correct details" });
       }
-      const passwordCompare =await  bcrypt.compare(password, user.password);
+      const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
         return res.status(400).json({ error: "enter correct details" });
       }
@@ -94,5 +96,16 @@ router.post(
     }
   }
 );
+
+router.post("/getuser", fetchuser, async (req, res) => {
+  try {
+    userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+    res.send(user)
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("error");
+  }
+});
 
 module.exports = router;
