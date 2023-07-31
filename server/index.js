@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const connectDB = require("./db");
 // const User = require("./models/User.js");
 // const userRoute = require("./routes/users");
+const authenticate=require('./routes/auth')
+const notesroute=require('./routes/notes')
+
 
 //intialise app with express
 
@@ -27,10 +30,17 @@ connectDB();
 
 //routes
 
+app.use("/api/auth", authenticate);
+app.use('/api/notes',notesroute)
+
 // app.use("/users", userRoute);
 
 app.get("/", (req, res) => {
   res.send("home page");
+});
+
+app.get("/api/v1/login", (req, res) => {
+  res.send("login");
 });
 
 //run server
