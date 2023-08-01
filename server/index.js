@@ -4,15 +4,16 @@ const mongoose = require("mongoose");
 const connectDB = require("./db");
 // const User = require("./models/User.js");
 // const userRoute = require("./routes/users");
-const authenticate=require('./routes/auth')
-const notesroute=require('./routes/notes')
-
+const authenticate = require("./routes/auth");
+const notesroute = require("./routes/notes");
+const cors = require("cors");
 
 //intialise app with express
 
 const app = express();
 
 //middlewares
+app.use(cors());
 
 app.use(express.json());
 
@@ -31,7 +32,7 @@ connectDB();
 //routes
 
 app.use("/api/auth", authenticate);
-app.use('/api/notes',notesroute)
+app.use("/api/notes", notesroute);
 
 // app.use("/users", userRoute);
 
